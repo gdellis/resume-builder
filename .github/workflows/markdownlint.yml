@@ -4,8 +4,8 @@ on:
     paths:
       - '**.md'
       - '!AGENTS.md'
-      - '.markdownlint.json'
-      - '.markdownlintignore'
+      # - '.markdownlint.json'
+      # - '.markdownlintignore'
 jobs:
   lint:
     runs-on: ubuntu-latest
