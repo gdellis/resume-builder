@@ -14,7 +14,10 @@ import {
   FileDown,
   Sparkles,
   Settings,
-  Layout
+  Layout,
+  Upload,
+  Database,
+  Eye
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +27,18 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { DatePicker } from '@/components/ui/date-picker';
 import { toast } from 'sonner';
+import { exportAllResumes, exportSingleResume, importResumes, readFileAsText, downloadFile } from '@/lib/export-import';
+import { createExampleResume } from '@/lib/data/example-resume';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface SidebarProps {
   onExportPDF?: () => void;
@@ -175,6 +189,126 @@ export function Sidebar({ onExportPDF, onOpenAI }: SidebarProps) {
             Export PDF
           </Button>
         )}
+        
+        {/* Export/Import Buttons */}
+        <Dialog>
+          <DialogTrigger
+            render={
+              <Button variant="outline" className="w-full" size="sm">
+                <Database className="w-4 h-4 mr-2" />
+                Export / Import
+              </Button>
+            }
+          />
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Export & Import Data</DialogTitle>
+              <DialogDescription>
+                Manage your resume data. Export to backup or import from a file.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Export Data</Label>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => {
+                      const json = exportAllResumes(resumes);
+                      downloadFile(json, `resumes-backup-${new Date().toISOString().split('T')[0]}.json`);
+                      toast.success('All resumes exported');
+                    }}
+                    variant="outline"
+                    className="flex-1"
+                    size="sm"
+                  >
+                    <FileDown className="w-4 h-4 mr-2" />
+                    Export All
+                  </Button>
+                  {currentResumeId && (
+                    <Button 
+                      onClick={() => {
+                        const resume = resumes.find(r => r.id === currentResumeId);
+                        if (resume) {
+                          const json = exportSingleResume(resume);
+                          downloadFile(json, `${resume.title.replace(/\s+/g, '-').toLowerCase()}.json`);
+                          toast.success('Current resume exported');
+                        }
+                      }}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Current
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="import-file">Import Resumes</Label>
+                <Input
+                  id="import-file"
+                  type="file"
+                  accept=".json"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      try {
+                        const content = await readFileAsText(file);
+                        const result = importResumes(content);
+                        if (result.success && result.resumes) {
+                          // Add imported resumes to store
+                          result.resumes.forEach(importedResume => {
+                            const newId = Math.random().toString(36).substring(2, 15);
+                            const newResume = {
+                              ...importedResume,
+                              id: newId,
+                              title: `${importedResume.title} (Imported)`,
+                            };
+                            // We'll need to add this to the store
+                            const { resumes: currentResumes } = useResumeStore.getState();
+                            useResumeStore.setState({
+                              resumes: [...currentResumes, newResume],
+                            });
+                          });
+                          toast.success(`Imported ${result.resumes.length} resume(s)`);
+                        } else {
+                          toast.error(result.error || 'Import failed');
+                        }
+                      } catch (error) {
+                        toast.error('Failed to read file');
+                      }
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="space-y-2 pt-4 border-t">
+                <Label>Example Data</Label>
+                <Button 
+                  onClick={() => {
+                    const exampleResume = createExampleResume();
+                    const { resumes: currentResumes } = useResumeStore.getState();
+                    useResumeStore.setState({
+                      resumes: [...currentResumes, exampleResume],
+                      currentResumeId: exampleResume.id,
+                      currentResumeData: exampleResume.data,
+                      currentResumeStyle: exampleResume.style,
+                    });
+                    toast.success('Example resume loaded');
+                  }}
+                  variant="secondary"
+                  className="w-full"
+                  size="sm"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Load Example Resume
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
         {onOpenAI && (
           <Button onClick={onOpenAI} variant="outline" className="w-full" size="sm">
             <Sparkles className="w-4 h-4 mr-2" />
@@ -352,22 +486,29 @@ export function WorkEditor() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Start Date</Label>
-                  <Input
-                    value={job.startDate}
-                    onChange={(e) => updateWork(index, 'startDate', e.target.value)}
-                    placeholder="2020-01"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>End Date</Label>
-                  <Input
-                    value={job.endDate || ''}
-                    onChange={(e) => updateWork(index, 'endDate', e.target.value)}
-                    placeholder="2023-01 or Present"
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label>Start Date</Label>
+                <DatePicker
+                  value={job.startDate}
+                  onChange={(value) => updateWork(index, 'startDate', value)}
+                  placeholder="Select start date"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>End Date</Label>
+                <DatePicker
+                  value={job.endDate}
+                  onChange={(value) => updateWork(index, 'endDate', value)}
+                  placeholder="Select end date"
+                  allowPresent
+                  isPresent={!job.endDate && !!job.startDate}
+                  onPresentChange={(present) => {
+                    if (present) {
+                      updateWork(index, 'endDate', '');
+                    }
+                  }}
+                />
+              </div>
               </div>
 
               <div className="space-y-2">
@@ -383,8 +524,8 @@ export function WorkEditor() {
               <div className="space-y-2">
                 <Label>Highlights (one per line)</Label>
                 <Textarea
-                  value={job.highlights.join('\n')}
-                  onChange={(e) => updateWork(index, 'highlight', e.target.value.split('\n').filter(Boolean))}
+                  value={job.highlights.filter(Boolean).join('\n')}
+                  onChange={(e) => updateWork(index, 'highlights', e.target.value.split('\n').filter(Boolean))}
                   placeholder={"Led team of 5 engineers\nIncreased revenue by 20%"}
                   rows={4}
                 />

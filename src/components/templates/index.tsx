@@ -841,9 +841,639 @@ export function EnhancvTemplate({ data, style }: TemplateProps) {
   );
 }
 
+export function ProMaterialTemplate({ data, style }: TemplateProps) {
+  const { basics, work, education, skills, languages, projects } = data;
+  const fontFamily = fontFamilies[style.fontFamily] || 'font-sans';
+  const fontSize = fontSizes[style.fontSize];
+
+  return (
+    <div
+      className={`w-full min-h-full bg-white ${fontFamily} ${fontSize}`}
+      style={{
+        '--primary': style.primaryColor,
+        '--secondary': style.secondaryColor,
+        '--accent': style.accentColor,
+      } as React.CSSProperties}
+    >
+      {/* Header */}
+      <header className="p-8 border-b-2" style={{ borderColor: style.primaryColor }}>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1
+              className="text-4xl font-bold mb-2"
+              style={{ color: style.primaryColor }}
+            >
+              {basics.name || 'Your Name'}
+            </h1>
+            {basics.label && (
+              <p
+                className="text-xl"
+                style={{ color: style.accentColor }}
+              >
+                {basics.label}
+              </p>
+            )}
+          </div>
+          <div className="text-right text-sm" style={{ color: style.secondaryColor }}>
+            {basics.email && <div>{basics.email}</div>}
+            {basics.phone && <div>{basics.phone}</div>}
+            {basics.url && <div>{basics.url}</div>}
+            {basics.location?.city && (
+              <div>
+                {[basics.location.city, basics.location.region]
+                  .filter(Boolean)
+                  .join(', ')}
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Two-Column Layout */}
+      <div className="flex">
+        {/* Left Sidebar */}
+        <div className="w-[35%] p-6 bg-slate-50">
+          {/* Profile Summary */}
+          {basics.summary && (
+            <section className="mb-8">
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-3 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Profile
+              </h2>
+              <p style={{ color: style.secondaryColor, fontSize: '0.9em', lineHeight: '1.6' }}>
+                {basics.summary}
+              </p>
+            </section>
+          )}
+
+          {/* Skills */}
+          {skills.length > 0 && (
+            <section className="mb-8">
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-3 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Skills
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full text-xs font-medium"
+                    style={{
+                      backgroundColor: style.accentColor,
+                      color: 'white',
+                    }}
+                  >
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Languages */}
+          {languages.length > 0 && (
+            <section>
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-3 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Languages
+              </h2>
+              <div className="space-y-1">
+                {languages.map((lang, idx) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between text-sm"
+                    style={{ color: style.secondaryColor }}
+                  >
+                    <span>{lang.language}</span>
+                    <span style={{ color: style.accentColor }}>{lang.fluency}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Main Content */}
+        <div className="w-[65%] p-8">
+          {/* Work Experience */}
+          {work.length > 0 && (
+            <section className="mb-8">
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-4 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Work Experience
+              </h2>
+              <div className="space-y-5">
+                {work.map((job, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-lg shadow-sm"
+                    style={{ backgroundColor: '#fafafa' }}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h3
+                        className="font-bold text-lg"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {job.position}
+                      </h3>
+                      <span
+                        className="text-sm whitespace-nowrap"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {job.startDate} – {job.endDate || 'Present'}
+                      </span>
+                    </div>
+                    <p
+                      className="text-sm font-medium mb-2"
+                      style={{ color: style.accentColor }}
+                    >
+                      {job.name}
+                    </p>
+                    {job.summary && (
+                      <p
+                        className="text-sm mb-2"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {job.summary}
+                      </p>
+                    )}
+                    {job.highlights.length > 0 && (
+                      <ul className="space-y-1">
+                        {job.highlights.filter(Boolean).map((h, i) => (
+                          <li
+                            key={i}
+                            className="text-sm"
+                            style={{ color: style.secondaryColor }}
+                          >
+                            • {h}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Education */}
+          {education.length > 0 && (
+            <section className="mb-8">
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-4 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Education
+              </h2>
+              <div className="space-y-4">
+                {education.map((edu, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-lg shadow-sm"
+                    style={{ backgroundColor: '#fafafa' }}
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <h3
+                        className="font-bold"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {edu.institution}
+                      </h3>
+                      <span
+                        className="text-sm whitespace-nowrap"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {edu.startDate} – {edu.endDate || 'Present'}
+                      </span>
+                    </div>
+                    <p style={{ color: style.secondaryColor }}>
+                      {edu.area}
+                      {edu.studyType && `, ${edu.studyType}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Projects */}
+          {projects.length > 0 && (
+            <section>
+              <h2
+                className="text-sm font-bold uppercase tracking-wider mb-4 pb-1 border-b-2"
+                style={{ color: style.primaryColor, borderColor: style.accentColor }}
+              >
+                Projects
+              </h2>
+              <div className="space-y-4">
+                {projects.map((proj, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-lg shadow-sm"
+                    style={{ backgroundColor: '#fafafa' }}
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <h3
+                        className="font-bold"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {proj.name}
+                      </h3>
+                      {proj.url && (
+                        <a
+                          href={proj.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm"
+                          style={{ color: style.accentColor }}
+                        >
+                          View →
+                        </a>
+                      )}
+                    </div>
+                    {proj.description && (
+                      <p
+                        className="text-sm mb-2"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {proj.description}
+                      </p>
+                    )}
+                    {proj.highlights.length > 0 && (
+                      <ul className="space-y-1">
+                        {proj.highlights.filter(Boolean).map((h, i) => (
+                          <li
+                            key={i}
+                            className="text-sm"
+                            style={{ color: style.secondaryColor }}
+                          >
+                            • {h}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ArtisticTemplate({ data, style }: TemplateProps) {
+  const { basics, work, education, skills, languages, projects } = data;
+  const fontFamily = fontFamilies[style.fontFamily] || 'font-sans';
+  const fontSize = fontSizes[style.fontSize];
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  return (
+    <div
+      className={`w-full min-h-full bg-white ${fontFamily} ${fontSize}`}
+      style={{
+        '--primary': style.primaryColor,
+        '--secondary': style.secondaryColor,
+        '--accent': style.accentColor,
+      } as React.CSSProperties}
+    >
+      {/* Top Bar Header */}
+      <header
+        className="h-32 flex items-center justify-center relative"
+        style={{ backgroundColor: style.primaryColor }}
+      >
+        <h1
+          className="text-5xl font-light tracking-widest text-center"
+          style={{ color: 'white', fontFamily: 'Raleway, sans-serif' }}
+        >
+          {basics.name || 'Your Name'}
+        </h1>
+      </header>
+
+      {/* Main Layout */}
+      <div className="flex">
+        {/* Left Sidebar - Light background */}
+        <div
+          className="w-[30%] p-8 min-h-screen"
+          style={{ backgroundColor: `${style.secondaryColor}15` }}
+        >
+          {/* Geometric Initials Box */}
+          <div className="mb-8 flex justify-center">
+            <div
+              className="w-40 h-40 border-2 flex items-center justify-center relative"
+              style={{ borderColor: style.primaryColor }}
+            >
+              {/* Geometric frame */}
+              <svg
+                viewBox="0 0 80 80"
+                className="absolute inset-0 w-full h-full"
+                style={{ stroke: style.primaryColor, strokeWidth: 2 }}
+              >
+                <path d="M 10 10 L 60 10 L 70 20 L 70 70 L 20 70 L 10 60 Z" fill="none" />
+              </svg>
+              <span
+                className="text-4xl font-light z-10"
+                style={{ color: style.primaryColor }}
+              >
+                {getInitials(basics.name)}
+              </span>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-2 mb-8" style={{ color: style.secondaryColor }}>
+            {basics.email && <p>{basics.email}</p>}
+            {basics.phone && <p>{basics.phone}</p>}
+            {basics.location?.city && (
+              <p>
+                {[basics.location.city, basics.location.region]
+                  .filter(Boolean)
+                  .join(', ')}
+              </p>
+            )}
+          </div>
+
+          {/* Social Links */}
+          {basics.profiles && basics.profiles.length > 0 && (
+            <div className="mb-8">
+              <p
+                className="text-sm font-semibold uppercase tracking-wider mb-3 pb-1 border-b"
+                style={{ color: style.primaryColor, borderColor: style.secondaryColor }}
+              >
+                Connect
+              </p>
+              <div className="space-y-2">
+                {basics.profiles.map((profile, idx) => (
+                  <p key={idx} style={{ color: style.secondaryColor }}>
+                    {profile.network}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Skills */}
+          {skills.length > 0 && (
+            <div className="mb-8">
+              <p
+                className="text-sm font-semibold uppercase tracking-wider mb-3 pb-1 border-b"
+                style={{ color: style.primaryColor, borderColor: style.secondaryColor }}
+              >
+                Expertise
+              </p>
+              <div className="space-y-2">
+                {skills.map((skill, idx) => (
+                  <p key={idx} style={{ color: style.secondaryColor }}>
+                    {skill.name}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Languages */}
+          {languages.length > 0 && (
+            <div className="mb-8">
+              <p
+                className="text-sm font-semibold uppercase tracking-wider mb-3 pb-1 border-b"
+                style={{ color: style.primaryColor, borderColor: style.secondaryColor }}
+              >
+                Languages
+              </p>
+              <div className="space-y-2">
+                {languages.map((lang, idx) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between"
+                    style={{ color: style.secondaryColor }}
+                  >
+                    <span>{lang.language}</span>
+                    <span style={{ color: style.accentColor }}>{lang.fluency}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Main Content */}
+        <div className="w-[70%] p-8">
+          {/* Job Title */}
+          {basics.label && (
+            <div className="text-center mb-6">
+              <h2
+                className="text-2xl uppercase tracking-widest mb-4"
+                style={{ color: style.primaryColor }}
+              >
+                {basics.label}
+              </h2>
+              <div
+                className="w-48 h-0.5 mx-auto"
+                style={{ backgroundColor: style.secondaryColor }}
+              />
+            </div>
+          )}
+
+          {/* Profile Section */}
+          {basics.summary && (
+            <section className="mb-8">
+              <div
+                className="px-6 py-2 mb-4 inline-block"
+                style={{
+                  backgroundColor: style.secondaryColor,
+                  color: 'white',
+                }}
+              >
+                <span className="uppercase tracking-widest text-sm font-semibold">
+                  Profile
+                </span>
+              </div>
+              <p
+                className="text-justify leading-relaxed"
+                style={{ color: style.secondaryColor }}
+              >
+                {basics.summary}
+              </p>
+            </section>
+          )}
+
+          {/* Experience Section */}
+          {work.length > 0 && (
+            <section className="mb-8">
+              <div
+                className="px-6 py-2 mb-4 inline-block"
+                style={{
+                  backgroundColor: style.secondaryColor,
+                  color: 'white',
+                }}
+              >
+                <span className="uppercase tracking-widest text-sm font-semibold">
+                  Experience
+                </span>
+              </div>
+              <div className="space-y-6">
+                {work.map((job, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-baseline mb-1">
+                      <h3
+                        className="font-bold text-lg"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {job.position}
+                      </h3>
+                      <span
+                        className="text-sm"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {job.startDate} – {job.endDate || 'Present'}
+                      </span>
+                    </div>
+                    <p
+                      className="text-sm mb-2 italic"
+                      style={{ color: style.accentColor }}
+                    >
+                      {job.name}
+                    </p>
+                    {job.summary && (
+                      <p
+                        className="text-sm mb-2"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {job.summary}
+                      </p>
+                    )}
+                    {job.highlights.length > 0 && (
+                      <p
+                        className="text-justify text-sm"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {job.highlights.filter(Boolean).join(' ')}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Education Section */}
+          {education.length > 0 && (
+            <section className="mb-8">
+              <div
+                className="px-6 py-2 mb-4 inline-block"
+                style={{
+                  backgroundColor: style.secondaryColor,
+                  color: 'white',
+                }}
+              >
+                <span className="uppercase tracking-widest text-sm font-semibold">
+                  Education
+                </span>
+              </div>
+              <div className="space-y-4">
+                {education.map((edu, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-baseline">
+                      <h3
+                        className="font-bold"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {edu.institution}
+                      </h3>
+                      <span
+                        className="text-sm"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {edu.startDate} – {edu.endDate || 'Present'}
+                      </span>
+                    </div>
+                    <p style={{ color: style.secondaryColor }}>
+                      {edu.area}
+                      {edu.studyType && `, ${edu.studyType}`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Projects Section */}
+          {projects.length > 0 && (
+            <section>
+              <div
+                className="px-6 py-2 mb-4 inline-block"
+                style={{
+                  backgroundColor: style.secondaryColor,
+                  color: 'white',
+                }}
+              >
+                <span className="uppercase tracking-widest text-sm font-semibold">
+                  Projects
+                </span>
+              </div>
+              <div className="space-y-4">
+                {projects.map((proj, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between items-baseline">
+                      <h3
+                        className="font-bold"
+                        style={{ color: style.primaryColor }}
+                      >
+                        {proj.name}
+                      </h3>
+                      {proj.url && (
+                        <a
+                          href={proj.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm"
+                          style={{ color: style.accentColor }}
+                        >
+                          View →
+                        </a>
+                      )}
+                    </div>
+                    {proj.description && (
+                      <p
+                        className="text-sm text-justify"
+                        style={{ color: style.secondaryColor }}
+                      >
+                        {proj.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const templates = {
   modern: ModernTemplate,
   classic: ClassicTemplate,
   creative: CreativeTemplate,
   enhancv: EnhancvTemplate,
+  promaterial: ProMaterialTemplate,
+  artistic: ArtisticTemplate,
 };

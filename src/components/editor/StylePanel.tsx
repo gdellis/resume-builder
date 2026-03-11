@@ -19,17 +19,19 @@ const templateOptions = [
   { value: 'classic', label: 'Classic' },
   { value: 'creative', label: 'Creative' },
   { value: 'enhancv', label: 'Enhancv' },
+  { value: 'promaterial', label: 'Pro Material' },
+  { value: 'artistic', label: 'Artistic' },
 ];
 
-const presetColors = [
-  { primary: '#1e293b', secondary: '#475569', accent: '#3b82f6' },
-  { primary: '#0f172a', secondary: '#334155', accent: '#8b5cf6' },
-  { primary: '#1f2937', secondary: '#4b5563', accent: '#10b981' },
-  { primary: '#2d3748', secondary: '#4a5568', accent: '#f59e0b' },
-  { primary: '#1a1a2e', secondary: '#4a4a6a', accent: '#e94560' },
-  { primary: '#1e3a5f', secondary: '#3d5a80', accent: '#ee6c4d' },
-  { primary: '#2c3e50', secondary: '#7f8c8d', accent: '#e74c3c' },
-  { primary: '#0d1b2a', secondary: '#415a77', accent: '#00b4d8' },
+import { ColorPicker } from '@/components/ui/color-picker';
+
+const presetThemes = [
+  { name: 'Corporate Blue', primary: '#1e3a5f', secondary: '#3d5a80', accent: '#0077b6' },
+  { name: 'Creative Purple', primary: '#4a148c', secondary: '#7b1fa2', accent: '#e91e63' },
+  { name: 'Minimal Gray', primary: '#212529', secondary: '#6c757d', accent: '#495057' },
+  { name: 'Modern Teal', primary: '#0d3b66', secondary: '#1565c0', accent: '#00b4d8' },
+  { name: 'Warm Amber', primary: '#3d2817', secondary: '#8b5a2b', accent: '#d97706' },
+  { name: 'Forest Green', primary: '#1b4332', secondary: '#2d6a4f', accent: '#40916c' },
 ];
 
 export function StylePanel() {
@@ -54,7 +56,9 @@ export function StylePanel() {
             onValueChange={(value: any) => updateResumeStyle({ template: value })}
           >
             <SelectTrigger>
-              <SelectValue />
+              <SelectValue>
+                {templateOptions.find(opt => opt.value === currentResumeStyle.template)?.label || currentResumeStyle.template}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {templateOptions.map((opt) => (
@@ -123,35 +127,36 @@ export function StylePanel() {
         </div>
 
         <div className="space-y-3">
-          <Label>Color Presets</Label>
-          <div className="grid grid-cols-4 gap-2">
-            {presetColors.map((preset, idx) => (
+          <Label>Professional Themes</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {presetThemes.map((theme) => (
               <button
-                key={idx}
-                className="w-full aspect-square rounded-lg border-2 hover:border-primary transition-colors relative overflow-hidden"
+                key={theme.name}
+                className="w-full p-3 rounded-lg border-2 hover:border-primary transition-colors text-left"
                 style={{
                   borderColor: 
-                    currentResumeStyle.primaryColor === preset.primary &&
-                    currentResumeStyle.accentColor === preset.accent
+                    currentResumeStyle.primaryColor === theme.primary &&
+                    currentResumeStyle.accentColor === theme.accent
                       ? '#3b82f6'
                       : 'transparent',
+                  backgroundColor: `${theme.secondary}15`,
                 }}
                 onClick={() =>
                   updateResumeStyle({
-                    primaryColor: preset.primary,
-                    secondaryColor: preset.secondary,
-                    accentColor: preset.accent,
+                    primaryColor: theme.primary,
+                    secondaryColor: theme.secondary,
+                    accentColor: theme.accent,
                   })
                 }
               >
-                <div 
-                  className="absolute inset-0"
-                  style={{ backgroundColor: preset.primary }}
-                />
-                <div 
-                  className="absolute right-0 bottom-0 w-1/2 h-1/2"
-                  style={{ backgroundColor: preset.accent }}
-                />
+                <div className="text-xs font-medium mb-1" style={{ color: theme.primary }}>
+                  {theme.name}
+                </div>
+                <div className="flex gap-1">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: theme.primary }} />
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: theme.secondary }} />
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: theme.accent }} />
+                </div>
               </button>
             ))}
           </div>
@@ -163,53 +168,26 @@ export function StylePanel() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label className="text-xs">Primary</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="color"
-                  value={currentResumeStyle.primaryColor}
-                  onChange={(e) => updateResumeStyle({ primaryColor: e.target.value })}
-                  className="w-8 h-8 p-1"
-                />
-                <Input
-                  value={currentResumeStyle.primaryColor}
-                  onChange={(e) => updateResumeStyle({ primaryColor: e.target.value })}
-                  className="w-24 h-8 text-xs"
-                />
-              </div>
+              <ColorPicker
+                value={currentResumeStyle.primaryColor}
+                onChange={(color) => updateResumeStyle({ primaryColor: color })}
+              />
             </div>
             
             <div className="flex items-center justify-between">
               <Label className="text-xs">Secondary</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="color"
-                  value={currentResumeStyle.secondaryColor}
-                  onChange={(e) => updateResumeStyle({ secondaryColor: e.target.value })}
-                  className="w-8 h-8 p-1"
-                />
-                <Input
-                  value={currentResumeStyle.secondaryColor}
-                  onChange={(e) => updateResumeStyle({ secondaryColor: e.target.value })}
-                  className="w-24 h-8 text-xs"
-                />
-              </div>
+              <ColorPicker
+                value={currentResumeStyle.secondaryColor}
+                onChange={(color) => updateResumeStyle({ secondaryColor: color })}
+              />
             </div>
             
             <div className="flex items-center justify-between">
               <Label className="text-xs">Accent</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  type="color"
-                  value={currentResumeStyle.accentColor}
-                  onChange={(e) => updateResumeStyle({ accentColor: e.target.value })}
-                  className="w-8 h-8 p-1"
-                />
-                <Input
-                  value={currentResumeStyle.accentColor}
-                  onChange={(e) => updateResumeStyle({ accentColor: e.target.value })}
-                  className="w-24 h-8 text-xs"
-                />
-              </div>
+              <ColorPicker
+                value={currentResumeStyle.accentColor}
+                onChange={(color) => updateResumeStyle({ accentColor: color })}
+              />
             </div>
           </div>
         </div>

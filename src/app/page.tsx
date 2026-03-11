@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Toaster } from '@/components/ui/sonner';
 import { AIAssistant } from './AIAssistant';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Home() {
   const { currentResumeData, currentResumeStyle, currentResumeId, resumes, createNewResume } = useResumeStore();
@@ -48,11 +49,14 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-100">
+    <div className="flex h-screen bg-background">
       <Sidebar onExportPDF={handleExportPDF} onOpenAI={() => setShowAI(true)} />
       
       <div className="flex-1 flex">
-        <div className="w-96 border-r bg-white overflow-hidden flex flex-col">
+        <div className="w-96 border-r bg-card overflow-hidden flex flex-col relative">
+          <div className="absolute top-2 right-2 z-10">
+            <ThemeToggle />
+          </div>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
             <div className="border-b px-4">
               <TabsList className="w-full my-3">
@@ -80,7 +84,7 @@ export default function Home() {
           </Tabs>
         </div>
 
-        <div className="flex-1 p-8 overflow-auto bg-slate-200">
+        <div className="flex-1 p-8 overflow-auto bg-muted">
           <div className="max-w-[210mm] mx-auto bg-white shadow-lg" style={{ minHeight: '297mm' }}>
             <div ref={previewRef} className="w-full" style={{ minHeight: '297mm' }}>
               <TemplateComponent data={currentResumeData} style={currentResumeStyle} />
