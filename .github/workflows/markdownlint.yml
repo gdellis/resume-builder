@@ -12,5 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DavidAnson/markdownlint-cli2-action@v22
-        with:
-          config: '.markdownlint.json'
+        # with:
+        #   config: '.markdownlint.json'
