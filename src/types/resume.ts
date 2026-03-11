@@ -5,6 +5,7 @@ export interface ResumeBasics {
   phone?: string;
   url?: string;
   summary?: string;
+  photo?: string;
   location?: {
     address?: string;
     city?: string;
@@ -114,7 +115,7 @@ export interface ResumeStyle {
   fontFamily: string;
   fontSize: 'small' | 'medium' | 'large';
   sectionSpacing: 'compact' | 'normal' | 'relaxed';
-  template: 'modern' | 'classic' | 'creative';
+  template: 'modern' | 'classic' | 'creative' | 'enhancv';
 }
 
 export interface SavedResume {

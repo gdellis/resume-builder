@@ -100,7 +100,7 @@ export function Sidebar({ onExportPDF, onOpenAI }: SidebarProps) {
 
       <Separator />
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4" style={{ maxHeight: '100%' }}>
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-slate-500 mb-2">Your Resumes</h3>
           {resumes.length === 0 ? (

@@ -7,6 +7,15 @@ import {
   defaultResumeData,
   defaultResumeStyle,
 } from '@/types/resume';
+import { AIProvider, PROVIDER_DEFAULTS } from '@/lib/ai';
+
+interface AIConfig {
+  provider: AIProvider;
+  model: string;
+  streaming: boolean;
+  temperature: number;
+  maxTokens: number;
+}
 
 interface ResumeStore {
   resumes: SavedResume[];
@@ -14,6 +23,7 @@ interface ResumeStore {
   currentResumeData: ResumeData;
   currentResumeStyle: ResumeStyle;
   isDirty: boolean;
+  aiConfig: AIConfig;
 
   createNewResume: (title?: string) => string;
   loadResume: (id: string) => void;
@@ -27,9 +37,25 @@ interface ResumeStore {
 
   saveCurrentResume: () => void;
   exportResume: () => SavedResume;
+
+  // AI configuration
+  setAIProvider: (provider: AIProvider) => void;
+  setAIModel: (model: string) => void;
+  setAIStreaming: (enabled: boolean) => void;
+  setAITemperature: (temperature: number) => void;
+  setAIMaxTokens: (maxTokens: number) => void;
+  updateAIConfig: (config: Partial<AIConfig>) => void;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 15);
+
+const defaultAIConfig: AIConfig = {
+  provider: 'ollama',
+  model: PROVIDER_DEFAULTS.ollama.model,
+  streaming: true,
+  temperature: 0.7,
+  maxTokens: 2048,
+};
 
 export const useResumeStore = create<ResumeStore>()(
   persist(
@@ -39,6 +65,7 @@ export const useResumeStore = create<ResumeStore>()(
       currentResumeData: { ...defaultResumeData },
       currentResumeStyle: { ...defaultResumeStyle },
       isDirty: false,
+      aiConfig: { ...defaultAIConfig },
 
       createNewResume: (title = 'Untitled Resume') => {
         const id = generateId();
@@ -213,6 +240,43 @@ export const useResumeStore = create<ResumeStore>()(
           updatedAt: new Date().toISOString(),
         };
       },
+
+      // AI Configuration methods
+      setAIProvider: (provider: AIProvider) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, provider },
+        }));
+      },
+
+      setAIModel: (model: string) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, model },
+        }));
+      },
+
+      setAIStreaming: (enabled: boolean) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, streaming: enabled },
+        }));
+      },
+
+      setAITemperature: (temperature: number) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, temperature },
+        }));
+      },
+
+      setAIMaxTokens: (maxTokens: number) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, maxTokens },
+        }));
+      },
+
+      updateAIConfig: (config: Partial<AIConfig>) => {
+        set((state) => ({
+          aiConfig: { ...state.aiConfig, ...config },
+        }));
+      },
     }),
     {
       name: 'resume-builder-storage',
@@ -220,6 +284,7 @@ export const useResumeStore = create<ResumeStore>()(
       partialize: (state) => ({
         resumes: state.resumes,
         currentResumeId: state.currentResumeId,
+        aiConfig: state.aiConfig,
       }),
     }
   )
