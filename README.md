@@ -36,24 +36,24 @@ git clone <repository-url>
 cd resume-builder
 ```
 
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
+1. Set up environment variables:
 ```bash
 cp .env.example .env.local
 ```
 
-4. Configure your AI provider (see [AI Configuration](#ai-configuration) below)
+1. Configure your AI provider (see [AI Configuration](#ai-configuration) below)
 
-5. Run the development server:
+1. Run the development server:
 ```bash
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser
+1. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## AI Configuration
 
