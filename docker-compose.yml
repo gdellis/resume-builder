@@ -5,8 +5,27 @@ services:
     build: .
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
-      - OLLAMA_CLOUD_URL=${OLLAMA_CLOUD_URL}
-      - OLLAMA_MODEL=${OLLAMA_MODEL}
+      # AI Provider Configuration
+      - AI_PROVIDER=${AI_PROVIDER:-ollama}
+      - AI_MODEL=${AI_MODEL:-llama3.2}
+      - AI_API_KEY=${AI_API_KEY:-}
+      - AI_BASE_URL=${AI_BASE_URL:-}
+      - AI_TIMEOUT=${AI_TIMEOUT:-30000}
+      - AI_MAX_RETRIES=${AI_MAX_RETRIES:-3}
+      # Provider-specific keys
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY:-}
+      - OLLAMA_CLOUD_URL=${OLLAMA_CLOUD_URL:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

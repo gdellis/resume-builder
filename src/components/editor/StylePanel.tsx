@@ -18,6 +18,7 @@ const templateOptions = [
   { value: 'modern', label: 'Modern' },
   { value: 'classic', label: 'Classic' },
   { value: 'creative', label: 'Creative' },
+  { value: 'enhancv', label: 'Enhancv' },
 ];
 
 const presetColors = [

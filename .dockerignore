@@ -1,6 +1,49 @@
+# Dependencies
 node_modules
+.pnpm
+.pnpm-store
+
+# Build outputs
 .next
-.git
+dist
+out
+build
+
+# Environment files (except .env.example)
+.env
+.env.local
+.env.development
+.env.production
 .env*.local
+
+# Git
+.git
+.gitignore
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS files
 .DS_Store
+*.pem
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+README.md
+CHANGELOG.md
+LICENSE
+*.md
