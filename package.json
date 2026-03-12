@@ -29,6 +29,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.17.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
