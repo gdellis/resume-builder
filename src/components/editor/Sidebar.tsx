@@ -265,7 +265,7 @@ export function Sidebar({ onExportPDF, onOpenAI }: SidebarProps) {
                               id: newId,
                               title: `${importedResume.title} (Imported)`,
                             };
-                            // We'll need to add this to the store
+                            // Add to store
                             const { resumes: currentResumes } = useResumeStore.getState();
                             useResumeStore.setState({
                               resumes: [...currentResumes, newResume],
