@@ -617,18 +617,18 @@ export function EducationEditor() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Start Date</Label>
-                  <Input
-                    value={edu.startDate || ''}
-                    onChange={(e) => updateEducation(index, 'startDate', e.target.value)}
-                    placeholder="2016-09"
+                  <DatePicker
+                    value={edu.startDate}
+                    onChange={(value) => updateEducation(index, 'startDate', value || '')}
+                    placeholder="Select start date"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>End Date</Label>
-                  <Input
-                    value={edu.endDate || ''}
-                    onChange={(e) => updateEducation(index, 'endDate', e.target.value)}
-                    placeholder="2020-06"
+                  <DatePicker
+                    value={edu.endDate}
+                    onChange={(value) => updateEducation(index, 'endDate', value || '')}
+                    placeholder="Select end date"
                   />
                 </div>
               </div>

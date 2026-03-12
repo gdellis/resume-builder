@@ -12,6 +12,7 @@ interface DatePickerProps {
   allowPresent?: boolean;
   isPresent?: boolean;
   onPresentChange?: (present: boolean) => void;
+  id?: string;
 }
 
 export function DatePicker({
@@ -21,6 +22,7 @@ export function DatePicker({
   allowPresent = false,
   isPresent = false,
   onPresentChange,
+  id = 'present-checkbox',
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   
@@ -97,12 +99,13 @@ export function DatePicker({
         <div className="flex items-center space-x-2">
           <input
             type="checkbox"
-            id={`present-${Math.random()}`}
+            id={id}
             checked={isPresent}
             onChange={(e) => onPresentChange(e.target.checked)}
             className="h-4 w-4 rounded border-gray-300"
+            aria-label="Present"
           />
-          <label htmlFor={`present-${Math.random()}`} className="text-sm font-normal cursor-pointer">
+          <label htmlFor={id} className="text-sm font-normal cursor-pointer">
             Present
           </label>
         </div>
