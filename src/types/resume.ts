@@ -115,7 +115,7 @@ export interface ResumeStyle {
   fontFamily: string;
   fontSize: 'small' | 'medium' | 'large';
   sectionSpacing: 'compact' | 'normal' | 'relaxed';
-  template: 'modern' | 'classic' | 'creative' | 'enhancv';
+  template: 'modern' | 'classic' | 'creative' | 'enhancv' | 'promaterial' | 'artistic';
 }
 
 export interface SavedResume {
