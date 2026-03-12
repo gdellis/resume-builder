@@ -1,3 +1,4 @@
+<!-- markdownlint-disable -->
 # AGENTS.md - Resume Builder
 
 ## Build/Lint Commands

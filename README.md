@@ -1,10 +1,14 @@
 # Resume Builder with AI
 
-A modern, AI-powered resume builder built with Next.js, React, and Tailwind CSS. Create professional resumes with the help of AI assistants from multiple providers including Ollama, OpenAI, Mistral, and Anthropic.
+A modern, AI-powered resume builder built with Next.js, React, and Tailwind CSS.
+Create professional resumes with the help of AI assistants from multiple
+providers including Ollama, OpenAI, Mistral, and Anthropic.
 
 ## Features
 
-- **AI-Powered Resume Writing**: Get help from AI to write professional summaries, generate achievement bullet points, suggest skills, and improve your job descriptions
+- **AI-Powered Resume Writing**: Get help from AI to write professional
+  summaries, generate achievement bullet points, suggest skills, and improve
+  your job descriptions
 - **Multiple AI Providers**: Choose from Ollama (local/cloud), OpenAI, Mistral AI, or Anthropic
 - **Real-time Streaming**: See AI responses as they generate with streaming support
 - **Multiple Resume Templates**: Modern, classic, and creative templates
